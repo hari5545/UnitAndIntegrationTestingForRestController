@@ -3276,3 +3276,22 @@ Caused by: org.codehaus.plexus.util.xml.pull.XmlPullParserException: Duplicated 
 2020-02-04 14:57:55,591 [Worker-85: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
 2020-02-04 14:57:55,601 [Worker-85: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
 2020-02-04 14:57:55,601 [Worker-85: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2020-02-04 15:17:18,471 [Worker-89: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2020-02-04 15:17:18,471 [Worker-89: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2020-02-04 15:17:18,471 [Worker-89: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2020-02-04 15:17:18,471 [Worker-89: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2020-02-04 15:17:18,471 [Worker-89: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2020-02-04 15:17:26,699 [Worker-81: Launching Executing test in E__MicroServices_Unit-Integration-Testing-RestController_UserManagementService] INFO  o.e.m.i.launch.MavenLaunchDelegate - E:\MicroServices\Unit-Integration-Testing-RestController\UserManagementService
+2020-02-04 15:17:26,699 [Worker-81: Launching Executing test in E__MicroServices_Unit-Integration-Testing-RestController_UserManagementService] INFO  o.e.m.i.launch.MavenLaunchDelegate -  mvn -B test -Dstyle.color=always
+2020-02-04 15:17:49,433 [Worker-81: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2020-02-04 15:17:49,433 [Worker-81: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 2 resources
+2020-02-04 15:17:49,433 [Worker-81: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2020-02-04 15:17:49,443 [Worker-81: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2020-02-04 15:17:49,443 [Worker-81: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2020-02-04 15:20:02,455 [Worker-81: Launching Executing install in E__MicroServices_Unit-Integration-Testing-RestController_UserManagementService] INFO  o.e.m.i.launch.MavenLaunchDelegate - E:\MicroServices\Unit-Integration-Testing-RestController\UserManagementService
+2020-02-04 15:20:02,455 [Worker-81: Launching Executing install in E__MicroServices_Unit-Integration-Testing-RestController_UserManagementService] INFO  o.e.m.i.launch.MavenLaunchDelegate -  mvn -B install -Dstyle.color=always
+2020-02-04 15:20:41,198 [Worker-93: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2020-02-04 15:20:41,198 [Worker-93: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 2 resources
+2020-02-04 15:20:41,198 [Worker-93: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2020-02-04 15:20:41,198 [Worker-93: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2020-02-04 15:20:41,198 [Worker-93: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource

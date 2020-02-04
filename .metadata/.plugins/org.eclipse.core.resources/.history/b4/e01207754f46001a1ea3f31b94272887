@@ -1,0 +1,44 @@
+package com.userservice.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.userservice.dto.UserDto;
+import com.userservice.model.User;
+import com.userservice.repository.UserRepository;
+import com.userservice.services.UserServices;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class UserservicesTest {
+
+
+	@Autowired
+	private UserServices userServices;
+
+	@MockBean
+	private UserRepository userRepository;
+
+	private User getUser() {
+		User user=new User("sree","hari", "yadav", "skht","hari@gmail.com","hari");
+		return user;
+	}
+
+	@Test
+	public void saveUserServicesTest() {
+		User user=getUser();
+		UserDto userDto=new UserDto(user.getUserId(),"sree","hari", "yadav", "skht","hari@gmail.com","hari");
+		when(userRepository.save(Mockito.any(User.class))).thenReturn(userDto);
+		assertThat(userServices.saveUser(user)).isEqualTo(userDto);
+		verify(userRepository).save(Mockito.any(User.class));
+	}
+}

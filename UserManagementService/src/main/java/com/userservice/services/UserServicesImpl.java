@@ -4,9 +4,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.userservice.dto.UserDto;
 import com.userservice.model.User;
@@ -15,7 +12,7 @@ import com.userservice.repository.UserRepository;
 
 
 @Service
-@Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
+//@Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
 public class UserServicesImpl implements UserServices{
 
 	@Autowired
@@ -47,12 +44,11 @@ public class UserServicesImpl implements UserServices{
 
 	@Override
 	public boolean deleteUser(int id) {
-		try {
-			userRepository.deleteById(id);
-			return true;
-		}catch (Exception e) {
-			return false;
-		}
-
+			try {
+				userRepository.deleteById(id);
+				return true;
+			}catch (Exception e) {
+				return false;
+			}
 	}
 }

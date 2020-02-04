@@ -1,0 +1,29 @@
+package com.userservice.service;
+
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class UserservicesTest {
+
+	@Autowired
+	private UserServices userServices;
+
+	@MockBean
+	private UserRepository userRepository;
+
+	private User getUser() {
+		User user=new User(1,"sree","hari", "yadav", "skht","hari@gmail.com","hari");
+		return user;
+	}
+
+	public void saveUserServicesTest() {
+		User user=getUser();
+		UserDto userDto=new UserDto(1,"sree","hari", "yadav", "skht","hari@gmail.com","hari");
+		when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+		assertThat(userServices.saveUser(user)).isEqualTo(userDto);
+		verify(userRepository).save(Mockito.any(User.class));
+	}
+}

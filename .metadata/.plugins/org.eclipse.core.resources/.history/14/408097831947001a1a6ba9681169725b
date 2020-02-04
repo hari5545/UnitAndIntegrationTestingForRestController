@@ -1,0 +1,76 @@
+package com.userservice;
+
+import org.json.JSONException;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.userservice.model.User;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = UserServicesApplication.class,webEnvironment = WebEnvironment.RANDOM_PORT)
+public class UserServicesApplicationIntegrationTests {
+
+	@LocalServerPort
+	public int port;
+	
+	
+	TestRestTemplate testRestTemplate =new TestRestTemplate();
+	HttpHeaders httpHeaders=new HttpHeaders();
+	
+	@Test
+	public void saveUserIntoDbTest() throws JSONException {
+		User user=getUser();
+		httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+		httpHeaders.set("Content-Type",MediaType.APPLICATION_JSON_VALUE);
+		HttpEntity<User> entity=new HttpEntity<User>(user,httpHeaders);
+		
+		ResponseEntity<String> response=testRestTemplate.exchange(createURLWithPort("/userService/saveUser"),
+																	HttpMethod.POST, entity,String.class);
+		
+		String expected=asJsonString(user);
+		
+		JSONAssert.assertEquals(expected, response.getBody(), false);
+		
+	}
+	
+	@Test
+	public void getUserOvjectFromDbTest() throws JSONException {
+		User user=getUser();
+		httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+		HttpEntity<String> entity=new HttpEntity<>(null,httpHeaders);
+		ResponseEntity<String> responseEntity=testRestTemplate.exchange(createURLWithPort("/userService/getUser/1"), HttpMethod.GET, entity, String.class);
+		String expected=asJsonString(user);
+		JSONAssert.assertEquals(expected, responseEntity.getBody(), false);
+	
+	}
+	
+	private String createURLWithPort(String uri) {
+		return "http://localhost:" + port + uri;
+	}
+
+	private User getUser() {
+		User user=new User(1,"hari", "sree", "yadav", "skht","hari@gmail.com", "hari");
+		return user;
+	}
+	
+	public static String asJsonString(final Object obj) {
+		try {
+			return new ObjectMapper().writeValueAsString(obj);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+}
+

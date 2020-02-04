@@ -1,0 +1,17 @@
+package com.userservice.services;
+
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.userservice.dto.UserDto;
+import com.userservice.model.User;
+
+@Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
+public interface UserServices {
+	
+    UserDto getUser(int id);
+    UserDto saveUser(User user);
+    UserDto updateUser(User user);
+    boolean deleteUser(int id);
+}

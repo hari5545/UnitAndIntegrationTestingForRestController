@@ -1,0 +1,90 @@
+package com.userservice.resources;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.http.MediaType;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.userservice.dto.UserDto;
+import com.userservice.model.User;
+import com.userservice.services.UserServices;
+
+@RestController
+@RequestMapping("/userService")
+public class UserResources {
+
+	private Log log=LogFactory.getLog(UserResources.class);
+	
+	@Autowired
+	private UserServices userServices;
+	
+	@Autowired
+	private MessageChannel output;
+	
+	User user;
+	@StreamListener(Processor.INPUT)
+	public void consumeUserFromApiGateway(User user) {
+		this.user=user;
+	}
+	@GetMapping(path = "/")
+	public User user() throws Exception {
+		throw new Exception();
+	}
+	
+	public User fallBackByGetUser() {
+		User user=new User(1,"loard", "hanuma", "hunuman", "world","hanuma@gmail.com","srirama");
+		return user;
+	}
+	@GetMapping(value = "/getUser",produces = MediaType.APPLICATION_JSON_VALUE)
+	@HystrixCommand(fallbackMethod ="fallBackByGetUser",commandKey ="userObject" ,groupKey = "userObject" )
+	public UserDto getUser() throws Exception {
+		UserDto userDto=userServices.getUser(user.getUserId());
+		log.info("get user method()"+userDto);
+		output.send(MessageBuilder.withPayload(userDto).build());
+		return userDto;
+	}
+	
+	
+	@PostMapping(value ="/saveUser",produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserDto saveUser() {
+		log.info("save user into db"+user);
+		UserDto userDto=userServices.saveUser(user);
+		output.send(MessageBuilder.withPayload(userDto).build());
+		return userDto;
+	}
+	
+	
+	@PutMapping(value = "/updateUser",produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserDto updateUser() {
+		log.info("update user into db"+user);
+		UserDto userDto=userServices.updateUser(user);
+		output.send(MessageBuilder.withPayload(userDto).build());
+		return userDto;
+	}
+	
+	
+	@DeleteMapping(value ="/deleteUser",produces = MediaType.TEXT_PLAIN_VALUE)
+	String deleteUser() {
+		boolean falg=userServices.deleteUser(user.getUserId());
+		if(falg) {
+			log.info("delete user data into db"+user.getUserId());
+			output.send(MessageBuilder.withPayload("your data is deleted sucessfully").build());
+		return "your data is deleted sucessfully";
+		}
+		log.error("record is not found"+user.getUserId());
+		output.send(MessageBuilder.withPayload("record is not found").build());
+		return "record is not found";
+	
+	}
+}

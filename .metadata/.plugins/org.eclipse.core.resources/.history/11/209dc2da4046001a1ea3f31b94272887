@@ -1,0 +1,35 @@
+package com.example.repositry;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.userservice.model.User;
+import com.userservice.repository.UserRepository;
+
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class UserRepositryTest {
+	@Autowired
+	private TestEntityManager testEntityManager;
+    
+	@Autowired
+	private  UserRepository userRepositry;
+	
+	@Test
+	public void getUserByUserId() {
+		
+		User user=new User(1, "sree", "hari", "yadav", "skht", "hari@gmail.com", "hari");
+		User saveUser=testEntityManager.persist(user);
+		User getUser=userRepositry.getOne(user.getUserId());
+		assertThat(saveUser).isEqualTo(getUser);
+		
+	}
+
+}

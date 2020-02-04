@@ -1,0 +1,85 @@
+package com.userservice.service;
+
+
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.userservice.dto.UserDto;
+import com.userservice.model.User;
+import com.userservice.repository.UserRepository;
+import com.userservice.services.UserServices;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class UserServiceTest {
+
+	@Autowired
+	private UserServices userServices;
+
+	@MockBean
+	private UserRepository userRepository;
+
+
+	private User getUser() {
+		User user=new User(1, "hari","sree", "yadav", "skht","hari@gmail.com","hari");
+		return user;
+	}
+
+	@Test
+	public void getUserTest() {
+		User user=getUser();
+		UserDto userDto=new UserDto(1, "hari","sree", "yadav", "skht","hari@gmail.com","hari");
+		//converting object to optional object
+
+		Optional<User> optionalUser=Optional.of(user);
+		when(userRepository.findById(user.getUserId())).thenReturn(optionalUser);
+
+		assertThat(userServices.getUser(user.getUserId()).toString()).isEqualTo(userDto.toString());
+		verify(userRepository).findById(user.getUserId());
+	}
+
+
+
+	@Test
+	public void saveUserTest() {
+		User user=getUser();
+		UserDto userDto=new UserDto(1, "hari","sree", "yadav", "skht","hari@gmail.com","hari");
+		when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+
+		//it verify object refernces along with data
+		assertThat(userServices.saveUser(user).toString()).isEqualTo(userDto.toString());
+		verify(userRepository).save(Mockito.any(User.class));
+	}
+
+	@Test
+	public void updateUserTest() {
+		User user=getUser();
+		UserDto userDto=new UserDto(1, "hari","sri", "yadav", "skht","hari@gmail.com","hari");
+		user.setMiddleName("sri");
+		when(userRepository.saveAndFlush(Mockito.any(User.class))).thenReturn(user);
+		assertThat(userServices.updateUser(user).toString()).isEqualTo(userDto.toString());
+		verify(userRepository).saveAndFlush(Mockito.any(User.class));
+	}
+
+	@Test
+	public void deleteUserSucessTest() {
+		User user=getUser();
+		when(userRepository.existsById(user.getUserId())).thenReturn(true);
+		assertTrue(userServices.deleteUser(user.getUserId()));
+		verify(userRepository).deleteById(user.getUserId());
+	}
+	
+}

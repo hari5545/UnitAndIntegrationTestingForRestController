@@ -81,7 +81,7 @@ public class UserServiceTest {
 		User user=getUser();
 		OngoingStubbing<Boolean> flag=when(userRepository.existsById(user.getUserId())).thenReturn(true);
 		if(flag==null) {
-			assertFalse(userServices.deleteUser(5));
+			assertFalse(userServices.deleteUser(user.getUserId()));
 		}
 		assertTrue(userServices.deleteUser(user.getUserId()));
 		verify(userRepository).deleteById(user.getUserId());

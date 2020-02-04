@@ -1,0 +1,91 @@
+package com.example.demo;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.userservice.dto.UserDto;
+import com.userservice.model.User;
+import com.userservice.resources.UserResources;
+import com.userservice.services.UserServices;
+
+@RunWith(MockitoJUnitRunner.class)
+public class UserControllerTest {
+	@Autowired
+	MockMvc mockMvc;
+
+	@Mock
+	UserServices userServices;
+
+	@InjectMocks
+	UserResources userResources;
+
+	@Before
+	public void init() {
+		mockMvc = MockMvcBuilders.standaloneSetup(userResources)
+				.build();
+	}
+
+	@Test
+	public void getUserTest() throws Exception {
+		UserDto user=new UserDto(1, "hari","sree", "yadav", "skht","hari@gmail.com","hari");
+		when(userServices.getUser(1)).thenReturn(user);
+		RequestBuilder requestBuilders=MockMvcRequestBuilders.get("/userService/getUser/1").accept(MediaType.APPLICATION_JSON_VALUE);
+		MvcResult mvcResult=mockMvc.perform(requestBuilders).andReturn();
+
+		//anothe way of writing test cases 
+		/*
+		 * .andExpect(status().isOk()) .andExpect(jsonPath("$.userId",Matchers.is(1)))
+		 * .andExpect(jsonPath("$.email",Matchers.is("hari@gmail.com")))
+		 * .andExpect(jsonPath("$.password",Matchers.is("hari")))
+		 * .andExpect(jsonPath("$.firstName",Matchers.is("hari")))
+		 * .andExpect(jsonPath("$.lastName",Matchers.is("yadav")))
+		 * .andExpect(jsonPath("$.middleName",Matchers.is("sree")))
+		 * .andExpect(jsonPath("$.address",Matchers.is("skht")));
+		 */
+
+		String expected ="{userId:1,firstName:hari,middleName:sree, lastName:yadav,address:skht, email:hari@gmail.com,password:hari}";
+		JSONAssert.assertEquals(expected, mvcResult.getResponse().getContentAsString(), false);
+		verify(userServices).getUser(1);
+	}
+
+	@Test
+	public void saveUserTest() throws Exception {
+		User user=new User(1,"hari","sree","yadav","skht","hari@gmail.com","hari");
+		UserDto userDto =new UserDto(1,"hari","sree","yadav","skht","hari@gmail.com","hari");
+		when(userServices.saveUser(Mockito.any(User.class))).thenReturn(userDto);
+
+		RequestBuilder requestBuilder=MockMvcRequestBuilders.post("/userService/saveUser")
+				.accept(MediaType.APPLICATION_JSON_VALUE)
+				.content(asJsonString(user))
+				.contentType(MediaType.APPLICATION_JSON_VALUE);
+		MvcResult mvcResult=mockMvc.perform(requestBuilder).andReturn();
+		String expected="{userId:1,firstName:hari,middleName:sree,lastName:yadav,address:skht,email:hari@gmail.com,password:hari}";
+		JSONAssert.assertEquals(expected, mvcResult.getResponse().getContentAsString(), false);
+		verify(userServices).saveUser(user);
+	}
+	public static String asJsonString(final Object obj) {
+	    try {
+	        return new ObjectMapper().writeValueAsString(obj);
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
+	}
+	
+}

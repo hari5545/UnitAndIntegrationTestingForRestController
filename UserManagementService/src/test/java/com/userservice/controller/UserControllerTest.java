@@ -110,8 +110,7 @@ public class UserControllerTest {
 
 	@Test
 	public void delateUserControllerForSucessTest() throws Exception {
-
-		boolean flag=true;
+			boolean flag=true;
 		when(userServices.deleteUser(1)).thenReturn(flag);
 		RequestBuilder requestBuilder= MockMvcRequestBuilders.delete("/userService/deleteUser/1")
 				.accept(MediaType.TEXT_PLAIN_VALUE);
@@ -127,7 +126,6 @@ public class UserControllerTest {
 
 	@Test
 	public void delateUserControllerFailureTest() throws Exception {
-
 		boolean flag=false;
 		when(userServices.deleteUser(1)).thenReturn(flag);
 		RequestBuilder requestBuilder= MockMvcRequestBuilders.delete("/userService/deleteUser/1")

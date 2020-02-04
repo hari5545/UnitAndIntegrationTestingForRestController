@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.json.JSONException;
 import org.junit.Test;
-import org.junit.jupiter.api.Order;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +34,23 @@ public class UserServicesApplicationIntegrationTests {
 	HttpHeaders httpHeaders=new HttpHeaders();
 
 	@Test
-	@Order(1)
+	public void getUserObjectFromDbTest() throws JSONException {
+		User user=getUser();
+
+		httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+
+		HttpEntity<String> entity=new HttpEntity<>(null,httpHeaders);
+
+		ResponseEntity<String> responseEntity=testRestTemplate.exchange(createURLWithPort("/userService/getUser/1"), 
+				HttpMethod.GET, entity, String.class);
+
+		String expected=asJsonString(user);
+
+		JSONAssert.assertEquals(expected, responseEntity.getBody(), false);
+
+	}
+
+	@Test
 	public void saveUserIntoDbTest() throws JSONException {
 		User user=getUser();
 
@@ -55,7 +70,6 @@ public class UserServicesApplicationIntegrationTests {
 	}
 
 	@Test
-	@Order(2)
 	public void updateUserObjectIntoDbTest() throws JSONException {
 		User user=getUser();
 
@@ -74,24 +88,6 @@ public class UserServicesApplicationIntegrationTests {
 
 
 	@Test
-	@Order(3)
-	public void getUserObjectFromDbTest() throws JSONException {
-		User user=getUser();
-
-		httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-
-		HttpEntity<String> entity=new HttpEntity<>(null,httpHeaders);
-
-		ResponseEntity<String> responseEntity=testRestTemplate.exchange(createURLWithPort("/userService/getUser/1"), 
-				HttpMethod.GET, entity, String.class);
-
-		String expected=asJsonString(user);
-
-		JSONAssert.assertEquals(expected, responseEntity.getBody(), false);
-
-	}
-	@Test
-	@Order(4)
 	public void deleteUserObjectInDbSucessTest() {
 				
 		httpHeaders.add(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN_VALUE);
@@ -108,7 +104,6 @@ public class UserServicesApplicationIntegrationTests {
 	}
 
 	@Test
-	@Order(5)
 	public void deleteUserObjectInDbFailureTest() {
 		
 		
